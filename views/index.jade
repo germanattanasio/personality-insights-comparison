@@ -1,0 +1,96 @@
+//- index.jade
+extends ./layout.jade
+
+block row-content
+  .container
+    .row
+      .col-lg-12
+        h2 Input
+        .well
+          h3(style='margin-top:0px;') Source
+          form.form-horizontal
+            fieldset
+              .form-group.row
+                //- input type selection, text, url, twitter
+                .col-lg-12
+                  label.col-lg-2.col-md-3.col-xs-4.control-label Type:
+                  .col-lg-10.col-md-9.col-xs-8.sample-radio-list
+                    .sample-radio-container
+                      label
+                        input.sample-radio(type='radio', name='input_type', value='text', checked)
+                        | Text
+                    .sample-radio-container
+                      label
+                        input.sample-radio(type='radio', name='input_type', value='url')
+                        | URL
+                    .sample-radio-container
+                      label
+                        input.sample-radio(type='radio', name='input_type', value='twitter')
+                        | Twitter
+              .form-group.row
+                //- language selection
+                .col-lg-12
+                  label.col-lg-2.col-md-3.col-xs-4.control-label Language:
+                  .col-lg-10.col-md-9.col-xs-8.sample-radio-list
+                    .sample-radio-container
+                      label
+                        input.sample-radio(type='radio', name='input_language', value='en', checked)
+                        | English
+                    .sample-radio-container
+                      label
+                        input.sample-radio(type='radio', name='input_language', value='es')
+                        | Spanish
+              .form-group.row
+                .col-lg-12.input-text
+                  label.col-lg-12.control-label Enter or paste the text to analyze:
+                  .col-lg-12
+                    textarea.form-control(rows='9', required='true', name='text' placeholder='Please enter the text to analyze (minimum of 100 words)...')
+                .col-lg-12.input-url
+                  label.col-lg-12.control-label URL:
+                  .col-lg-12
+                    input.form-control(type='text', placeholder='http://foo.bar/index.html')
+                .col-lg-12.input-twitter
+                  label.col-lg-12.control-label Twitter:
+                  .col-lg-12
+                    input.form-control(type='text', placeholder='germanatt')
+        .well
+          .row
+            .col-lg-6.col-md-6.col-xs-6
+              .checkbox
+                label
+                  input(type='checkbox', style='margin:0.25em;')
+                  | Download Output as CSV
+            .col-lg-5.col-md-5.col-xs-5.col-lg-push-1.col-md-push-1.col-xs-push-1
+              button.btn.btn-block Compare
+    .row
+      .col-lg-12
+        h2 Comparation
+        .row
+          .col-lg-12
+            .form-group.row.loading.text-center.loading(style='display:none;')
+              img(src='images/watson.gif')
+            .form-group.row.error(style='display: none;')
+              p.errorMsg
+            .results(style='display: none;')
+
+      //- templates to avoid to create HTML in javascript
+      .hidden
+        div#header-template
+          .row.theader
+            .col-lg-4.col-xs-4
+              span Name
+            .col-lg-8.col-xs-8.text-right
+              span Value ± Sampling Error
+
+        div#trait-template
+          .row
+            .tname.col-lg-7.col-xs-7
+              span
+            .tvalue.col-lg-5.col-xs-5.text-right
+              span
+
+        div#model-template
+          .row
+            .col-lg-12.col-xs-12.text-center
+              span
+
