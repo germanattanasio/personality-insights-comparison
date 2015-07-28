@@ -49,16 +49,22 @@ app.post('/', function(req, res, next) {
 
   // create an async task for each profile
   var tasks = req.body.profiles.map(buildProfileRequest);
-
   async.parallel(tasks, function(err, results) {
     if (err)
       next(err);
-    else {
-      res.json(results.map(function(p){return p[0]}));
-    }
+    else
+      res.json(results);
   });
 });
 
+function ignoreErrors(callback) {
+  return function(err, result) {
+    if (err)
+      callback(null, err);
+    else
+      callback(null, result);
+  }
+}
 /**
  * Build the request for Personality Insights based on the profile type
  *  - text: no actions required
@@ -70,26 +76,27 @@ app.post('/', function(req, res, next) {
  */
 function buildProfileRequest(params) {
   return function (callback) {
+    var cb = ignoreErrors(callback);
     if (params.type === 'text') {
       // profile based on text, no actions required
-      personalityInsights.profile(params, callback);
+      personalityInsights.profile(params, cb);
 
     } else if (params.type === 'url') {
       request.get(params.text, function(err, response, body){
         params.text = body;
-        personalityInsights.profile(params, callback);
+        personalityInsights.profile(params, cb);
       });
 
     } else {
       // return the tweets as contentItems
       twitter.getTweets(params.text, function(err, tweets){
         if (err) {
-          callback(err);
+          cb(err);
         }
         else {
           delete params.text;
           params.contentItems = tweets;
-          personalityInsights.profile(params, callback);
+          personalityInsights.profile(params, cb);
         }
       });
     }

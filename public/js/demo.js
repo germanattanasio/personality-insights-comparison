@@ -23,9 +23,12 @@ $(document).ready(function() {
     $error = $('.error'),
     $errorMsg = $('.errorMsg'),
     $results = $('.results'),
-    $compareBtn = $('.compare-btn');
+    $compareBtn = $('.compare-btn'),
+    $addProfile = $('.add-profile');
 
   var colors = ['#1cc665', '#0098ff', 'red', 'cadetblue', 'gold', 'green'];
+
+  var profileId = 1;
 
   /**
    * 1. Create the request
@@ -61,6 +64,7 @@ $(document).ready(function() {
     $results.hide();
     $compareBtn.blur();
     $loading[0].scrollIntoView(true);
+    $addProfile.addClass('disabled');
 
 
     $.post('/', {
@@ -78,6 +82,7 @@ $(document).ready(function() {
       // always
       .always(function() {
         $loading.hide();
+        $addProfile.removeClass('disabled');
       });
   });
 
@@ -94,42 +99,60 @@ $(document).ready(function() {
   function listProfiles(profiles) {
     $('.profile-list').empty();
     $('.measuring-bar').empty();
+
     // parse the big5 from the profile and add them to the comparator
-    var flattened = profiles.map(parseBig5);
-    flattened.forEach(function(big5, i) {
-      var className = 'point-' + i;
-      displayBig5(big5, className, colors[i % colors.length]);
+    var profileIds = getProfileIds();
 
-      var description = 'Profile ' + (i + 1) +
-        ' - lang: ' + profiles[i].processed_lang +
-        ' - ' + profiles[i].word_count + ' words';
-
+    profiles.forEach(function(profile, i) {
+      var id = profileIds[i];
       var template = $('.checkbox-profile-template').clone().first();
-      template.find('.name').text(description);
-      template.find('input')
-        .change(function(e) {
+      var description = 'Profile ' + id;
+
+      if (profile.error) {
+        description += ' - ' + profile.error;
+      } else {
+        description += ' - lang: ' + profile.processed_lang +
+          ' - ' + profile.word_count + ' words';
+
+        var className = 'point-' + i;
+
+        displayBig5(profile, className, colors[i % colors.length]);
+        template.find('input').change(function(e) {
           if (e.target.checked)
             $('.' + className).show();
           else
             $('.' + className).hide();
         });
 
-      template.find('.profile-label-link')
+        template.find('.profile-label-link')
         .css('background-color', colors[i % colors.length])
         .hover(function() {
           $('.' + className).toggleClass('bigger');
         });
+      }
 
+      template.find('.name').text(description);
       template.appendTo('.profile-list');
     });
   }
 
+  /**
+   * Returns the profile ids that are being use
+   * @return {Array} The array with profie ids
+   */
+  function getProfileIds() {
+    return $('.profile-form').map(function(_, form) {
+      return $(form).prop('data-id');
+    });
+  }
 
   /**
    * Display a profile and its traits
    * @param  {Object} profile the object with the personality profile
    */
-  function displayBig5(big5, className, color) {
+  function displayBig5(profile, className, color) {
+    var big5 = parseBig5(profile);
+
     $('.measuring-bar').each(function(i, traitContainer) {
       $('<div>').appendTo(traitContainer)
         .addClass('point')
@@ -156,12 +179,18 @@ $(document).ready(function() {
 
   function addProfile() {
     var template = $('.profile-template').last().clone();
-    var id = $('.profile-template').length - 1,
+    var id = profileId,
       lid = id + '-p-lang-',
       tid = id + '-p-type-';
 
+    profileId++;
+
+    template.find('.close-button').click(function(){
+      template.remove();
+    });
+
     template.find('.profile-form').prop('data-id', id);
-    template.find('.profile-number').text('Profile ' + (id + 1));
+    template.find('.profile-number').text('Profile ' + id);
     template.find('.language-radio').prop('name', lid);
     template.find('.input-type-radio').prop('name', tid);
 
@@ -181,7 +210,7 @@ $(document).ready(function() {
     $('.profile-container').append(template);
   }
 
-  $('.add-profile').click(addProfile);
+  $($addProfile).click(addProfile);
   addProfile();
   addProfile();
 });

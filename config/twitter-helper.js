@@ -54,6 +54,21 @@ function toContentItem(tweet) {
     created: Date.parse(tweet.created_at)
   };
 }
+
+function formatError(twitterError) {
+  var message = JSON.parse(twitterError.data)
+    .errors.map(function(err) {
+      return err.message;
+    }).join(' ');
+
+  if (twitterError.statusCode === 404)
+    message = 'Username not found.';
+
+  return {
+    code: twitterError.statusCode,
+    error: message
+  };
+}
 /**
  * Create a TwitterHelper object
  * @param {Object} config configuration file that has the
@@ -105,8 +120,11 @@ TwitterHelper.prototype.getTweets = function(screen_name, callback) {
 
   var processTweets = function(_tweets) {
     // Check if _tweets its an error
-    if (!util.isArray(_tweets))
-      return callback(_tweets, null);
+    if (!util.isArray(_tweets)){
+      var error = formatError(_tweets);
+      console.log('getTweets error for:', username, error.error);
+      return callback(formatError(_tweets), null);
+    }
 
     var items = _tweets
       .filter(englishAndNoRetweet)
