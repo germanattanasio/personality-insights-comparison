@@ -63,7 +63,9 @@ input[type="radio"] {
 .red-border {
     border: 1px solid red;
 }
-
+.orange-border {
+    border: 1px solid orange;
+}
 .trait-row {
     margin-bottom: 1.25rem;
 }

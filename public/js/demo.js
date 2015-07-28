@@ -38,7 +38,7 @@ $(document).ready(function() {
   $compareBtn.click(function() {
     var profiles = [];
     $('.profile-form').each(function(_, form) {
-      var id = $(form).prop('data-id');
+      var id = $(form).attr('data-id');
 
       if (typeof(id) === 'undefined')
         return;
@@ -49,9 +49,9 @@ $(document).ready(function() {
       profile.language = $(form).find('.language-radio:checked').val();
       profile.text = $(form).find('.input-' + profile.type).val();
       if ($.trim(profile.text) === '') {
-        $(form).find('.input-' + profile.type).addClass('red-border');
+        $(form).find('.input-' + profile.type).addClass('orange-border');
       } else {
-        $(form).find('.input-' + profile.type).removeClass('red-border');
+        $(form).find('.input-' + profile.type).removeClass('orange-border');
         profiles.push(profile);
       }
     });
@@ -107,10 +107,14 @@ $(document).ready(function() {
       var id = profileIds[i];
       var template = $('.checkbox-profile-template').clone().first();
       var description = 'Profile ' + id;
+      var form = $('form[data-id="' + id + '"]');
+      var type = $(form).find('.input-type-radio:checked').val();
 
       if (profile.error) {
+        $(form).find('.input-' + type).addClass('red-border');
         description += ' - ' + profile.error;
       } else {
+        $(form).find('.input-' + type).removeClass('red-border');
         description += ' - lang: ' + profile.processed_lang +
           ' - ' + profile.word_count + ' words';
 
@@ -142,7 +146,7 @@ $(document).ready(function() {
    */
   function getProfileIds() {
     return $('.profile-form').map(function(_, form) {
-      return $(form).prop('data-id');
+      return $(form).attr('data-id');
     });
   }
 
@@ -189,7 +193,7 @@ $(document).ready(function() {
       template.remove();
     });
 
-    template.find('.profile-form').prop('data-id', id);
+    template.find('.profile-form').attr('data-id', id);
     template.find('.profile-number').text('Profile ' + id);
     template.find('.language-radio').prop('name', lid);
     template.find('.input-type-radio').prop('name', tid);

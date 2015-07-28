@@ -83,16 +83,21 @@ function buildProfileRequest(params) {
 
     } else if (params.type === 'url') {
       request.get(params.text, function(err, response, body){
-        params.text = body;
-        personalityInsights.profile(params, cb);
+        if (err)
+          cb({ error: err.message, code: 404 });
+        else if (response.statusCode !== 200) {
+          cb({ error: response.statusMessage, code: response.statusCode });
+        } else {
+          params.text = body;
+          personalityInsights.profile(params, cb);
+        }
       });
 
     } else {
       // return the tweets as contentItems
       twitter.getTweets(params.text, function(err, tweets){
-        if (err) {
+        if (err)
           cb(err);
-        }
         else {
           delete params.text;
           params.contentItems = tweets;

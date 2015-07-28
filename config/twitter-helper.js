@@ -122,7 +122,7 @@ TwitterHelper.prototype.getTweets = function(screen_name, callback) {
     // Check if _tweets its an error
     if (!util.isArray(_tweets)){
       var error = formatError(_tweets);
-      console.log('getTweets error for:', username, error.error);
+      console.log('getTweets error for:', screen_name, error.error);
       return callback(formatError(_tweets), null);
     }
 
