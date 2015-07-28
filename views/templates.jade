@@ -1,0 +1,55 @@
+//- templates to avoid to create HTML in javascript
+.hidden
+  .profile-template.col-lg-6.col-md-6.col-xs-12
+    .well
+      h3(style='margin-top:0px;cursor:pointer;').profile-number
+      form.form-horizontal.profile-form
+        fieldset
+          .form-group.row
+            //- language selection
+            .col-lg-12
+              label.col-lg-2.col-md-3.col-xs-4.control-label Language:
+              .col-lg-10.col-md-9.col-xs-8.sample-radio-list
+                .sample-radio-container
+                  label
+                    input.sample-radio.language-radio(type='radio', value='en', checked)
+                    | English
+                .sample-radio-container
+                  label
+                    input.sample-radio.language-radio(type='radio', value='es')
+                    | Spanish
+          .form-group.row
+            //- input type selection, text, url, twitter
+            .col-lg-12
+              label.col-lg-2.col-md-3.col-xs-4.control-label Type:
+              .col-lg-10.col-md-9.col-xs-8.sample-radio-list
+                .sample-radio-container
+                  label
+                    input.sample-radio.input-type-radio(type='radio', value='twitter', checked)
+                    | Twitter
+                .sample-radio-container
+                  label
+                    input.sample-radio.input-type-radio(type='radio', value='url')
+                    | URL
+                .sample-radio-container
+                  label
+                    input.sample-radio.input-type-radio(type='radio', value='text')
+                    | Text
+          .form-group.row
+            .col-lg-12.div-text
+              label.col-lg-12.control-label Enter or paste the text to analyze:
+              .col-lg-12
+                textarea.form-control.input-text(rows='6', required='true', placeholder='Please enter the text to analyze (minimum of 3500 words)...')
+            .col-lg-12.div-url
+              label.col-lg-12.control-label URL:
+              .col-lg-12
+                input.form-control.input-url(type='text', placeholder='http://foo.bar/index.html')
+            .col-lg-12.div-twitter
+              label.col-lg-12.control-label Twitter:
+              .col-lg-12
+                input.form-control.input-twitter(type='text', placeholder='@username')
+
+  .checkbox.checkbox-profile-template
+    label.profile-label-link
+      input(type='checkbox', style='margin:0.25em;', checked)
+      label.name Profile

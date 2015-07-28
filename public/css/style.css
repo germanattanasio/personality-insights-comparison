@@ -9,40 +9,13 @@
 .content {
   margin-bottom: 0px;
 }
-
-.wordsCount {
-  padding-bottom: 5px;
-}
-
-.model_title {
-    font-weight: bold;
-    padding-left: 0px;
-    padding-top: 5px;
-}
-
-.model_trait {
-    padding-left: 10px;
-}
-
-.model_name {
-    background-color: #ccc;
-    margin-top: 10px;
-}
-
-.theader {
-    background-color: #bbb;
-    font-weight: bold;
-    padding-left: 0px;
-    padding-bottom: 5px;
-}
-.col555px {
-    height: 555px;
-    overflow: auto;
+.loading {
+  padding: 10px;
 }
 
 .errorMsg {
-    font-weight: bold;
-    color: red;
+  font-weight: bold;
+  color: red;
 }
 
 .results > .row {
@@ -53,27 +26,122 @@
   font-weight: bold;
 }
 
-#vizcontainer svg {
-  min-width: 480px;
-  width: 100%;
-  height: 100%;
-}
 .sample-radio-list {
   margin-bottom: 10px;
 }
+
 .sample-radio-container {
   display: inline-block;
   margin-left: 15px;
 }
+
 input[type="radio"] {
   margin:3px 5px 0px 0px;
 }
+
 .buttons-container {
   margin-top: 15px;
 }
-/* Portrait tablets and small desktops */
-@media (max-width: 1200px) {
-    .col555px {
-        height: 100%;
-    }
+
+.profile-list {
+  margin-left: 5px;
+}
+.profile-link {
+  display: block;
+  padding-bottom: 5px;
+  text-decoration: none;
+}
+
+.profile-label-link {
+  padding: 2px;
+}
+
+.red-border {
+  border: 1px solid red;
+}
+
+.trait-row {
+  margin-bottom: 1.25rem;
+}
+.trait-row p {
+  margin: 0px;
+}
+.trait-row .col-md-6 {
+  padding: 0px;
+}
+
+.measuring-bar {
+  width: 100%;
+  height: 1.25rem;
+  border-bottom: 1px solid #404041;
+  position: relative;
+}
+
+.point {
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-left: -.625rem;
+  background-color: #1cc665;
+  border-radius: 50%;
+  display: inline-block;
+  position: absolute;
+  bottom: -.625rem;
+  -webkit-transition: .3s;
+  -moz-transition: .3s;
+  -o-transition: .3s;
+  transition: .3s;
+  /*border:1px solid white;*/
+}
+
+.bigger {
+  z-index: 2;
+  width: 2.2rem;
+  height: 2.2rem;
+  margin-left: -1.08rem;
+  bottom: -1.08rem;
+}
+.smaller {
+  width: .5rem;
+  height: .5rem;
+  margin-left: -.25rem;
+  bottom: -.25rem;
+  background-color: #d0d2d3;
+}
+
+.panel-comparisons {
+  border: 1px solid #a6a8ab;
+  border-radius: 8px;
+}
+.panel-comparisons .panel-body {
+  padding: 1.6875rem .9375rem 0rem;
+}
+.panel-heading {
+  background-color: #404041;
+}
+.panel-heading p {
+  color: #f1f1f2;
+  text-align: center;
+}
+
+@media screen and (max-width: 992px) {
+
+  .container > .row {
+    margin-left: 0px;
+    margin-right: 0px;
+  }
+
+  .trait-row .col-md-3 {
+    display: inline-block;
+  }
+  .trait-row .col-md-3:nth-of-type(1) {
+    float: left;
+  }
+  .trait-row .col-md-3:nth-of-type(2) {
+    float: right;
+  }
+  .trait-row .col-md-6 {
+    padding-right: 15px;
+    padding-left: 15px;
+    clear: both;
+  }
 }

@@ -16,40 +16,85 @@
 
 'use strict';
 
-var express  = require('express'),
-  app        = express(),
-  bluemix    = require('./config/bluemix'),
-  watson     = require('watson-developer-cloud'),
-  extend     = require('util')._extend;
+var express     = require('express'),
+  app           = express(),
+  watson        = require('watson-developer-cloud'),
+  util          = require('util'),
+  request       = require('request'),
+  async         = require('async'),
+  config        = require('./config/config'),
+  TwitterHelper = require('./config/twitter-helper');
+
 
 // Bootstrap application settings
 require('./config/express')(app);
 
-// if bluemix credentials exists, then override local
-var credentials = extend({
-  version: 'v2',
-  username: '<username>',
-  password: '<password>'
-}, bluemix.getServiceCreds('personality_insights')); // VCAP_SERVICES
-
 // Create the service wrapper
-var personalityInsights = watson.personality_insights(credentials);
+var personalityInsights = watson.personality_insights(config.personality_insights);
+
+// Create the twitter helper
+var twitter = new TwitterHelper(config.twitter);
 
 // render index page
 app.get('/', function(req, res) {
   res.render('index');
 });
 
-// 1. Check if we have a captcha and reset the limit
-// 2. pass the request to the rate limit
 app.post('/', function(req, res, next) {
-    personalityInsights.profile(req.body, function(err, profile) {
-      if (err)
-        return next(err);
-      else
-        return res.json(profile);
-    });
+
+  if (!req.body.profiles || !util.isArray(req.body.profiles)){
+    next({ code:400, error:'Bad request'});
+    return;
+  }
+
+  // create an async task for each profile
+  var tasks = req.body.profiles.map(buildProfileRequest);
+
+  async.parallel(tasks, function(err, results) {
+    if (err)
+      next(err);
+    else {
+      res.json(results.map(function(p){return p[0]}));
+    }
+  });
 });
+
+/**
+ * Build the request for Personality Insights based on the profile type
+ *  - text: no actions required
+ *  - url: use the HTML as text
+ *  - twitter: build a contentItems array with all the tweets
+ *
+ * @param  {Object} params The parameters {text:'', type:(url|text|tweeter), language:''}
+ * @return {function}  An async function
+ */
+function buildProfileRequest(params) {
+  return function (callback) {
+    if (params.type === 'text') {
+      // profile based on text, no actions required
+      personalityInsights.profile(params, callback);
+
+    } else if (params.type === 'url') {
+      request.get(params.text, function(err, response, body){
+        params.text = body;
+        personalityInsights.profile(params, callback);
+      });
+
+    } else {
+      // return the tweets as contentItems
+      twitter.getTweets(params.text, function(err, tweets){
+        if (err) {
+          callback(err);
+        }
+        else {
+          delete params.text;
+          params.contentItems = tweets;
+          personalityInsights.profile(params, callback);
+        }
+      });
+    }
+  };
+}
 
 // error-handler settings
 require('./config/error-handler')(app);
