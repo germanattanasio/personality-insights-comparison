@@ -8,6 +8,6 @@ applications:
 - name: personality-insights-comparator
   command: node app.js
   path: .
-  memory: 256M
+  memory: 512M
   services:
   - personality-insights-service-standard

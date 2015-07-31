@@ -194,7 +194,7 @@ $(document).ready(function() {
     });
 
     template.find('.profile-form').attr('data-id', id);
-    template.find('.profile-number').text('Profile ' + id);
+    template.find('.profile-number').text('Entity ' + id);
     template.find('.language-radio').prop('name', lid);
     template.find('.input-type-radio').prop('name', tid);
 
