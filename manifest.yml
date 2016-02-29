@@ -1,8 +1,8 @@
 ---
 declared-services:
-  personality-insights-service-standard:
+  personality-insights-service:
     label: personality_insights
-    plan: standard
+    plan: tiered
 
 applications:
 - name: personality-insights-comparison
@@ -10,4 +10,4 @@ applications:
   path: .
   memory: 512M
   services:
-  - personality-insights-service-standard
+  - personality-insights-service
