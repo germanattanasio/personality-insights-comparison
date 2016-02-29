@@ -39,7 +39,7 @@ applications:
 5. Create the Personality Insights service in Bluemix
 
   ```sh
-  $ cf create-service personality_insights standard personality-insights-service-standard
+  $ cf create-service personality_insights tiered personality-insights-service
   ```
 
 6. Push it live!
